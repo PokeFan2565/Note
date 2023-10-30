@@ -72,7 +72,7 @@ fun NotesScreen() {
 
     LaunchedEffect(key1 = Unit) {
         getUserInfo { userModel ->
-            userName = userModel.name?: "Default Name"
+            userName = userModel.name
         }
     }
 
