@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "334605249613",
+    "project_id": "note-b93a4",
+    "storage_bucket": "note-b93a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334605249613:android:01a988d0260893ec308004",
+        "android_client_info": {
+          "package_name": "com.arukusoft.note"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKsrFxANrB2vE3mzytXGiJoVLmMiQ2FHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
