@@ -67,63 +67,19 @@ val notList: List<Note>
 @Composable
 fun NotesScreen() {
 
-    // To Get User Info
-    var userName by remember { mutableStateOf("") }
 
-    LaunchedEffect(key1 = Unit) {
-        getUserInfo { userModel ->
-            userName = userModel.name
-        }
-    }
 
-    // End
-
-    Log.d("Kutta1", userName)
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .border(1.dp, Color.Blue),
+            .border(1.dp, Color.Blue)
+            .padding(top = 20.dp),
         contentAlignment = Alignment.TopCenter
     ) {
         Column {
 
-            // Start Top Bar
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    //.background(Color.LightGray)
-                    .padding(horizontal = 20.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Menu,
-                    contentDescription = "Menu",
-                    modifier = Modifier.size(40.dp),
-                    tint = Color.Blue
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = userName,
-                        modifier = Modifier.padding(horizontal = 5.dp),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontSize = 20.sp
-                    )
-                    Icon(
-                        imageVector = Icons.Default.AccountCircle,
-                        contentDescription = "Circle Icon",
-                        tint = Color.Blue,
-                        modifier = Modifier.size(40.dp)
-                    )
-                }
 
-            }
-            // End Top Bar
             Spacer(modifier = Modifier.height(10.dp))
             // Start Title Area
             Box(
@@ -151,7 +107,7 @@ fun NotesScreen() {
             ) {
                 items(notList) {
                     Card(
-                        onClick = {  },
+                        onClick = { },
                         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
                     ) {
                         Column(
@@ -205,6 +161,46 @@ fun NotesScreen() {
             }
         }
     }
+}
+
+@Composable
+fun TopTitleBar(userName:String) {
+    // Start Top Bar
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp)
+            //.background(Color.LightGray)
+            .padding(horizontal = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Menu,
+            contentDescription = "Menu",
+            modifier = Modifier.size(40.dp),
+            tint = Color.Blue
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = userName,
+                modifier = Modifier.padding(horizontal = 5.dp),
+                style = MaterialTheme.typography.titleMedium,
+                fontSize = 20.sp
+            )
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = "Circle Icon",
+                tint = Color.Blue,
+                modifier = Modifier.size(40.dp)
+            )
+        }
+
+    }
+    // End Top Bar
 }
 
 @Preview(showBackground = true)

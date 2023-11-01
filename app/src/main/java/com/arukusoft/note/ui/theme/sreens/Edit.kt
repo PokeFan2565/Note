@@ -1,5 +1,6 @@
 package com.arukusoft.note.ui.theme.sreens
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -40,42 +41,39 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.arukusoft.note.ui.theme.firebase.saveNote
+import com.arukusoft.note.ui.theme.screenLogics.getCurrentDateInLocalFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditScreen(){
-    var title:String by remember { mutableStateOf("") }
-    var description:String by remember { mutableStateOf("") }
+fun EditScreen() {
+    var title: String by remember { mutableStateOf("") }
+    var description: String by remember { mutableStateOf("") }
 
+    fun getTitle(): String {
+        return title
+    }
+
+
+
+
+    // Main Body Start
     Box(
         modifier = Modifier
-            .fillMaxSize(),
-            //.background(Color.Cyan),
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(top = 64.dp),
         contentAlignment = Alignment.TopCenter
-    ){
+    ) {
         Column(
-            modifier = Modifier
-                .padding(horizontal = 30.dp, vertical = 20.dp)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.padding(top = 0.dp)
         ) {
-            Text(
-                text = "Add/Edit",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 32.sp,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                    //.border(2.dp, Color.LightGray),
-                color = Color.Black
 
-            )
-            Spacer(modifier = Modifier.height(10.dp))
+            // For Title
             TextField(value = title , onValueChange = {
                 title = it
             },
-                modifier = Modifier.fillMaxWidth()
-                    .border(2.dp, Color.Black),
+                modifier = Modifier.fillMaxWidth(),
                 leadingIcon = {
                     Icon(imageVector = Icons.Outlined.Edit, contentDescription = "Edit Icon")
 
@@ -83,84 +81,37 @@ fun EditScreen(){
                 placeholder = {
                     Text(text = "Enter Title",
                         fontSize = 16.sp,
-                        )
-                },
-                label = {
-                    Text(text = "Title",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Medium
                     )
                 },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next
                 )
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            // End Title Area
 
+            Spacer(modifier = Modifier.height(2.dp))
+
+            // For Description
             TextField(value = description , onValueChange = {
                 description = it
             },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(600.dp)
-                    .border(2.dp, Color.Black)
-                    .heightIn(max = 600.dp),
+                modifier = Modifier.fillMaxSize(),
+
                 placeholder = {
-                    Text(text = "Enter Description",
+                    Text(text = "Enter Descriptions",
                         fontSize = 16.sp,
                     )
                 },
-                label = {
-                    Text(text = "Description",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                },
                 keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Done
                 )
             )
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(topStart = 5.dp, bottomEnd = 5.dp))
-                    .background(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(
-                                Color.Cyan,
-                                Color.White
-                            )
-                        )
-                    )
-                    .height(50.dp)
-                    .clickable { }
-                    .border(2.dp, Color.Black)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ){
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(imageVector = Icons.Outlined.Done, contentDescription = "",
-                        tint = Color.Blue,
-                        modifier = Modifier.size(24.dp))
-                    Spacer(modifier = Modifier.width(5.dp))
-                    Text(text = "Save",
-                        color = Color.Blue,
-                        fontSize = 24.sp)
-                }
-
-            }
+            // End Descriptions Area
         }
     }
+    // End Main Body
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreEditScreen(){
-    EditScreen()
-}
+// Logic
+
+
