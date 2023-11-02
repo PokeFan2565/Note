@@ -19,7 +19,7 @@ import com.arukusoft.note.ui.theme.sreens.UserRegisterScreen
 @Composable
 fun MainNavigation(context: Context) {
     val navHostController = rememberNavController()
-    NavHost(navController = navHostController, startDestination = Screen.Edit.route) {
+    NavHost(navController = navHostController, startDestination = Screen.Home.route) {
         composable(Screen.Auth.route) {
             UserRegisterScreen(context = context, navHostController)
         }
@@ -47,12 +47,7 @@ fun MainNavigation(context: Context) {
             LoginScreen(context, navHostController)
         }
         composable(Screen.Edit.route) {
-            LayoutScreen(
-                title = "Add Note",
-                icon = Icons.Default.Done,
-                onClick = { }) {
-                EditScreen()
-            }
+            EditScreen(context, navHostController)
         }
 
     }

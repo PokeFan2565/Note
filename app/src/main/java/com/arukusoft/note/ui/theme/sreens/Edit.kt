@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,12 +42,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.arukusoft.note.ui.theme.firebase.saveNote
 import com.arukusoft.note.ui.theme.screenLogics.getCurrentDateInLocalFormat
+import com.arukusoft.note.ui.theme.screenLogics.saveMyNotes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditScreen() {
+fun EditScreen(context: Context, navHostController: NavHostController) {
     var title: String by remember { mutableStateOf("") }
     var description: String by remember { mutableStateOf("") }
 
@@ -54,62 +57,79 @@ fun EditScreen() {
         return title
     }
 
-
-
-
-    // Main Body Start
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(top = 64.dp),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        Column(
-            modifier = Modifier.padding(top = 0.dp)
+    // Scaffold Area
+    LayoutScreen(
+        title = "Add Notes",
+        icon = Icons.Default.Done,
+        onClick = {
+            saveMyNotes(
+                context,
+                navHostController = navHostController,
+                title,
+                description
+            )
+        }) {
+        // Main Body Start
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(top = 64.dp),
+            contentAlignment = Alignment.TopCenter
         ) {
+            Column(
+                modifier = Modifier.padding(top = 0.dp)
+            ) {
 
-            // For Title
-            TextField(value = title , onValueChange = {
-                title = it
-            },
-                modifier = Modifier.fillMaxWidth(),
-                leadingIcon = {
-                    Icon(imageVector = Icons.Outlined.Edit, contentDescription = "Edit Icon")
+                // For Title
+                TextField(
+                    value = title, onValueChange = {
+                        title = it
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Outlined.Edit, contentDescription = "Edit Icon")
 
-                },
-                placeholder = {
-                    Text(text = "Enter Title",
-                        fontSize = 16.sp,
+                    },
+                    placeholder = {
+                        Text(
+                            text = "Enter Title",
+                            fontSize = 16.sp,
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next
                     )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
                 )
-            )
-            // End Title Area
+                // End Title Area
 
-            Spacer(modifier = Modifier.height(2.dp))
+                Spacer(modifier = Modifier.height(2.dp))
 
-            // For Description
-            TextField(value = description , onValueChange = {
-                description = it
-            },
-                modifier = Modifier.fillMaxSize(),
+                // For Description
+                TextField(
+                    value = description, onValueChange = {
+                        description = it
+                    },
+                    modifier = Modifier.fillMaxSize(),
 
-                placeholder = {
-                    Text(text = "Enter Descriptions",
-                        fontSize = 16.sp,
+                    placeholder = {
+                        Text(
+                            text = "Enter Descriptions",
+                            fontSize = 16.sp,
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Default
                     )
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done
                 )
-            )
-            // End Descriptions Area
+                // End Descriptions Area
+            }
         }
+        // End Main Body
     }
-    // End Main Body
+    // End Scaffhold Area
+
+
 }
 
 // Logic

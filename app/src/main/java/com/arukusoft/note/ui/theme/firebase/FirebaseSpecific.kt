@@ -1,7 +1,6 @@
 package com.arukusoft.note.ui.theme.firebase
 
 import android.content.Context
-import android.icu.text.CaseMap.Title
 import android.util.Log
 import android.widget.Toast
 import com.arukusoft.note.ui.theme.models.Cardmodel
@@ -67,17 +66,22 @@ fun getUserInfo(callback: (UserModel) -> Unit) {
 
 }
 
-fun saveNote(context: Context, title: String, description: String, date: String) {
+fun saveNote(context: Context, title: String, description: String, date: String): Boolean {
     database = Firebase.database.reference
     val myNote = Cardmodel(title, description, date)
+    var isSuccess = false
     if (user != null) {
         if (title.isBlank() || description.isBlank()) {
             Toast.makeText(context, "Please Fill The All Feild", Toast.LENGTH_SHORT).show()
 
         }else{
             database.child("Notes").child(user).child(title).setValue(myNote)
+            isSuccess = true
+
         }
+
     }
+    return isSuccess
 }
 
 
