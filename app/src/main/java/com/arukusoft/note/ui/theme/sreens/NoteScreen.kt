@@ -40,9 +40,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.arukusoft.note.ui.theme.firebase.getNotes
 import com.arukusoft.note.ui.theme.firebase.getUserInfo
 import com.arukusoft.note.ui.theme.models.Cardmodel
+import com.arukusoft.note.ui.theme.navigation.Screen
 import com.arukusoft.note.ui.theme.screenLogics.LoadingHandler
 import kotlinx.coroutines.delay
 
@@ -57,7 +59,7 @@ var noteList = mutableListOf<Cardmodel?>()
 @SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotesScreen() {
+fun NotesScreen(navHostController: NavHostController, onCardClick: (cardModel:Cardmodel?) -> Unit) {
 
     // To Get User Info
     var userName by remember { mutableStateOf("") }
@@ -78,7 +80,7 @@ fun NotesScreen() {
         }
     }
 
-    LoadingHandler(userName = userName, loading = { LoadingScreen() }) {
+    LoadingHandler(userName = userName, loading = { EmptyNoteScreen() }) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -117,7 +119,7 @@ fun NotesScreen() {
                 ) {
                     items(noteList) {
                         Card(
-                            onClick = { },
+                            onClick = {onCardClick(it)},
                             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
                         ) {
                             Column(
@@ -224,8 +226,3 @@ fun TopTitleBar(userName:String) {
     // End Top Bar
 }
 
-@Preview(showBackground = true)
-@Composable
-fun Show() {
-    NotesScreen()
-}

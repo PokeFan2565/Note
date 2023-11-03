@@ -5,20 +5,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.arukusoft.note.ui.theme.firebase.getUserId
 import com.arukusoft.note.ui.theme.screenLogics.openAddScreen
 import com.arukusoft.note.ui.theme.sreens.EditScreen
 import com.arukusoft.note.ui.theme.sreens.LayoutScreen
 import com.arukusoft.note.ui.theme.sreens.LoginScreen
 import com.arukusoft.note.ui.theme.sreens.NotesScreen
+import com.arukusoft.note.ui.theme.sreens.UpdateNoteScreen
 import com.arukusoft.note.ui.theme.sreens.UserRegisterScreen
 
 @Composable
 fun MainNavigation(context: Context) {
     val navHostController = rememberNavController()
+    val userId = getUserId()
     NavHost(navController = navHostController, startDestination = Screen.Home.route) {
         composable(Screen.Auth.route) {
             UserRegisterScreen(context = context, navHostController)
@@ -28,7 +32,11 @@ fun MainNavigation(context: Context) {
                 title = "Notes",
                 icon = Icons.Default.Add,
                 onClick = { openAddScreen(navHostController) }) {
-                NotesScreen()
+                NotesScreen(navHostController) {
+                    if (it != null) {
+                        navHostController.navigate("${Screen.Update.route}/${it.title}/${it.description}")
+                    }
+                }
             }
         }
         composable(Screen.Home.route) {
@@ -39,7 +47,11 @@ fun MainNavigation(context: Context) {
                     title = "Notes",
                     icon = Icons.Default.Add,
                     onClick = { openAddScreen(navHostController) }) {
-                    NotesScreen()
+                    NotesScreen(navHostController) {
+                        if (it != null) {
+                            navHostController.navigate("${Screen.Update.route}/${it.title}/${it.description}")
+                        }
+                    }
                 }
             }
         }
@@ -48,6 +60,24 @@ fun MainNavigation(context: Context) {
         }
         composable(Screen.Edit.route) {
             EditScreen(context, navHostController)
+        }
+        composable("${Screen.Update.route}/{cardTitle}/{cardDescription}", arguments = listOf(
+            navArgument(name = "cardTitle") {
+                type = NavType.StringType
+            },
+            navArgument(name = "cardDescription") {
+                type = NavType.StringType
+            }
+        )) {
+            val cardTitle = it.arguments!!.getString("cardTitle")
+            val cardDescription = it.arguments!!.getString("cardDescription")
+            UpdateNoteScreen(
+                navHostController = navHostController,
+                userId = userId!!,
+                context = context,
+                cardTitle = cardTitle!!,
+                cardDescription = cardDescription!!
+            )
         }
 
     }
@@ -60,4 +90,5 @@ sealed class Screen(val route: String) {
     object LogIn : Screen("login")
     object Main : Screen("main")
     object Edit : Screen("edit")
+    object Update : Screen("update")
 }

@@ -121,5 +121,23 @@ fun saveNote(context: Context, userId:String, title: String, description: String
     return isSuccess
 }
 
+fun updateNote(context: Context, userId:String,oldTitle:String, title: String, description: String, date: String): Boolean {
+    database = Firebase.database.reference
+    val myNote = Cardmodel(title, description, date)
+    var isSuccess = false
+    if (userId != null) {
+        if (title.isBlank() || description.isBlank()) {
+            Toast.makeText(context, "Please Fill The All Feild", Toast.LENGTH_SHORT).show()
 
+        }else{
+            database.child("Notes").child(userId).child(oldTitle).setValue(myNote)
+            isSuccess = true
+
+        }
+
+    }else{
+        Log.d("nullUser", "saveNote: Anonymuse User Found")
+    }
+    return isSuccess
+}
 

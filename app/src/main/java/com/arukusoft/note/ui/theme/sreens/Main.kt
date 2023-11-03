@@ -67,6 +67,13 @@ fun LayoutScreen(
                 }
             )
         },
+
+        content = {
+            LoadingHandler(userName = userName, loading = { LoadingScreen() }) {
+                content()
+            }
+        },
+
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onClick,
@@ -76,12 +83,9 @@ fun LayoutScreen(
             ) {
                 Icon(imageVector = icon, contentDescription = "")
             }
-        }
-    ) {
-        LoadingHandler(userName = userName, loading = {LoadingScreen()}) {
-            content()
-        }
-    }
+        },
+
+    )
 
 }
 
