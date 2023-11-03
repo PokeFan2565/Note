@@ -28,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,9 +44,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.arukusoft.note.ui.theme.firebase.getUserInfo
 import com.arukusoft.note.ui.theme.firebase.saveNote
+import com.arukusoft.note.ui.theme.screenLogics.LoadingHandler
 import com.arukusoft.note.ui.theme.screenLogics.getCurrentDateInLocalFormat
 import com.arukusoft.note.ui.theme.screenLogics.saveMyNotes
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,75 +61,87 @@ fun EditScreen(context: Context, navHostController: NavHostController) {
         return title
     }
 
+    var userId by remember { mutableStateOf("") }
+
+    LaunchedEffect(key1 = Unit) {
+        userId = FirebaseAuth.getInstance().currentUser!!.uid
+    }
+
     // Scaffold Area
     LayoutScreen(
         title = "Add Notes",
         icon = Icons.Default.Done,
         onClick = {
             saveMyNotes(
-                context,
+                context = context,
+                userId = userId,
                 navHostController = navHostController,
-                title,
-                description
+                title = title,
+                description = description
             )
         }) {
-        // Main Body Start
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .padding(top = 64.dp),
-            contentAlignment = Alignment.TopCenter
-        ) {
-            Column(
-                modifier = Modifier.padding(top = 0.dp)
+        LoadingHandler(userName = userId, loading = { LoadingScreen() }) {
+            // Main Body Start
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(top = 64.dp),
+                contentAlignment = Alignment.TopCenter
             ) {
+                Column(
+                    modifier = Modifier.padding(top = 0.dp)
+                ) {
 
-                // For Title
-                TextField(
-                    value = title, onValueChange = {
-                        title = it
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = {
-                        Icon(imageVector = Icons.Outlined.Edit, contentDescription = "Edit Icon")
+                    // For Title
+                    TextField(
+                        value = title, onValueChange = {
+                            title = it
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Outlined.Edit,
+                                contentDescription = "Edit Icon"
+                            )
 
-                    },
-                    placeholder = {
-                        Text(
-                            text = "Enter Title",
-                            fontSize = 16.sp,
+                        },
+                        placeholder = {
+                            Text(
+                                text = "Enter Title",
+                                fontSize = 16.sp,
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
                         )
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Next
                     )
-                )
-                // End Title Area
+                    // End Title Area
 
-                Spacer(modifier = Modifier.height(2.dp))
+                    Spacer(modifier = Modifier.height(2.dp))
 
-                // For Description
-                TextField(
-                    value = description, onValueChange = {
-                        description = it
-                    },
-                    modifier = Modifier.fillMaxSize(),
+                    // For Description
+                    TextField(
+                        value = description, onValueChange = {
+                            description = it
+                        },
+                        modifier = Modifier.fillMaxSize(),
 
-                    placeholder = {
-                        Text(
-                            text = "Enter Descriptions",
-                            fontSize = 16.sp,
+                        placeholder = {
+                            Text(
+                                text = "Enter Descriptions",
+                                fontSize = 16.sp,
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Default
                         )
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Default
                     )
-                )
-                // End Descriptions Area
+                    // End Descriptions Area
+                }
             }
+            // End Main Body
         }
-        // End Main Body
     }
     // End Scaffhold Area
 

@@ -1,5 +1,6 @@
 package com.arukusoft.note.ui.theme.sreens
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,7 +40,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.arukusoft.note.ui.theme.firebase.getNotes
 import com.arukusoft.note.ui.theme.firebase.getUserInfo
+import com.arukusoft.note.ui.theme.models.Cardmodel
+import com.arukusoft.note.ui.theme.screenLogics.LoadingHandler
+import kotlinx.coroutines.delay
 
 
 data class Note(
@@ -48,118 +53,134 @@ data class Note(
     val date: String? = null
 )
 
-val notList: List<Note>
-    get() = listOf(
-        Note(
-            "\"Exploring the Enchanting Beauty of Kyoto\"",
-            "Discover the timeless allure of Kyoto, a city that effortlessly blends traditional Japanese culture with modern sophistication. Nestled in the heart of Japan, Kyoto is a captivating destination that promises a journey through time. From its ancient temples and shrines to its bustling streets and vibrant markets, this city has something for every traveler.\n" +
-                    "\n" +
-                    "Unearth the secrets of Kyoto's historic districts, where well-preserved machiya houses transport you back to the Edo period. Wander through the stunning bamboo groves of Arashiyama and visit the iconic Fushimi Inari Shrine, with its thousands of vermilion torii gates leading up the sacred Mount Inari. Don't miss the serene beauty of the Golden Pavilion, Kinkaku-ji, and the rock garden of Ryoan-ji, where Zen tranquility reigns.\n" +
-                    "\n" +
-                    "Kyoto's culinary scene is equally tantalizing. Savor the delicate flavors of kaiseki cuisine, indulge in freshly made matcha tea and sweets in traditional teahouses, or feast on street food at Nishiki Market. The city offers a fascinating blend of ancient traditions and contemporary innovations, making it an enriching experience for all.\n" +
-                    "\n" +
-                    "Explore the enchanting beauty of Kyoto, where every corner is a piece of art, and every moment is a step into history. Embrace the culture, soak in the natural beauty, and let Kyoto cast its enchanting spell on you.",
-            "25/07/2000"
-        )
-    )
-
+var noteList = mutableListOf<Cardmodel?>()
+@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotesScreen() {
 
+    // To Get User Info
+    var userName by remember { mutableStateOf("") }
 
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .border(1.dp, Color.Blue)
-            .padding(top = 20.dp),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        Column {
+    // End
 
+    LaunchedEffect(key1 = Unit) {
+        getNotes {
+            noteList.clear()
+            it.forEach { cardmodel ->
+                noteList.add(cardmodel)
 
-            Spacer(modifier = Modifier.height(10.dp))
-            // Start Title Area
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-
-            ) {
-                Text(
-                    text = "Notes",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
             }
-            // End Title Are
-            Spacer(modifier = Modifier.height(10.dp))
-            // Start Card Area
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    //.background(Color.LightGray)
-                    .padding(horizontal = 20.dp, vertical = 0.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                items(notList) {
-                    Card(
-                        onClick = { },
-                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 10.dp, vertical = 10.dp)
-                        ) {
-                            // For Card title
-                            Text(
-                                text = it.title.toString(),
-                                maxLines = 1,
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.ExtraBold,
-                                fontSize = 18.sp,
-                                modifier = Modifier.fillMaxWidth(),
-                                color = Color.Blue
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
+            getUserInfo { userModel ->
+                userName = userModel.name
+            }
+        }
+    }
 
-                            // For Card Description
-                            Box(
-                                modifier = Modifier.padding(
-                                    horizontal = 10.dp
-                                )
+    LoadingHandler(userName = userName, loading = { LoadingScreen() }) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .border(1.dp, Color.Blue)
+                .padding(top = 20.dp),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            Column {
+
+
+                Spacer(modifier = Modifier.height(10.dp))
+                // Start Title Area
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+
+                ) {
+                    Text(
+                        text = "Notes",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
+                // End Title Are
+                Spacer(modifier = Modifier.height(10.dp))
+                // Start Card Area
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        //.background(Color.LightGray)
+                        .padding(horizontal = 20.dp, vertical = 0.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    items(noteList) {
+                        Card(
+                            onClick = { },
+                            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 10.dp, vertical = 10.dp)
                             ) {
+                                // For Card title
                                 Text(
-                                    text = it.description.toString(),
+                                    text = it?.title.toString(),
+                                    maxLines = 1,
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontSize = 18.sp,
+                                    modifier = Modifier.fillMaxWidth(),
+                                    color = Color.Blue
+                                )
+                                Spacer(modifier = Modifier.height(10.dp))
+
+                                // For Card Description
+                                Box(
+                                    modifier = Modifier.padding(
+                                        horizontal = 10.dp
+                                    )
+                                ) {
+                                    Text(
+                                        text = it?.description.toString(),
+                                        maxLines = 2,
+                                        style = MaterialTheme.typography.titleSmall,
+                                        fontWeight = FontWeight.Medium,
+                                        fontStyle = FontStyle.Italic,
+                                        modifier = Modifier.fillMaxWidth(),
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(10.dp))
+                                // For Date
+                                Text(
+                                    text = "Date : ${it?.date.toString()}",
                                     maxLines = 2,
                                     style = MaterialTheme.typography.titleSmall,
                                     fontWeight = FontWeight.Medium,
                                     fontStyle = FontStyle.Italic,
                                     modifier = Modifier.fillMaxWidth(),
-                                    textAlign = TextAlign.Center
+                                    textAlign = TextAlign.End
                                 )
                             }
-                            Spacer(modifier = Modifier.height(10.dp))
-                            // For Date
-                            Text(
-                                text = "Date : ${it.date.toString()}",
-                                maxLines = 2,
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.Medium,
-                                fontStyle = FontStyle.Italic,
-                                modifier = Modifier.fillMaxWidth(),
-                                textAlign = TextAlign.End
-                            )
                         }
+                        Spacer(modifier = Modifier.height(10.dp))
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
                 }
             }
         }
+
+        // End Main Body
+    }
+}
+@Composable
+fun NotesLoading(noteList: MutableList<Cardmodel?>, loading:@Composable () -> Unit, content:@Composable () -> Unit){
+    return if (noteList.isEmpty()){
+        loading()
+    }else{
+        content()
     }
 }
 

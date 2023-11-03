@@ -16,10 +16,22 @@ import java.util.Date
 import java.util.Locale
 
 
-fun saveMyNotes(context: Context, navHostController: NavHostController, title:String, description:String){
+fun saveMyNotes(
+    context: Context,
+    userId: String,
+    navHostController: NavHostController,
+    title: String,
+    description: String
+) {
     val currentDate = getCurrentDateInLocalFormat()
-    val isSuccess = saveNote(context = context, title = title, description = description, date = currentDate)
-    if (isSuccess){
+    val isSuccess = saveNote(
+        context = context,
+        userId = userId,
+        title = title,
+        description = description,
+        date = currentDate
+    )
+    if (isSuccess) {
         Toast.makeText(context, "Note Added SuccessFully", Toast.LENGTH_SHORT).show()
         navHostController.navigate(Screen.Main.route)
     }
