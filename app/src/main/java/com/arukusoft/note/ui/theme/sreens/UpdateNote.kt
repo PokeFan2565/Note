@@ -44,11 +44,7 @@ fun UpdateNoteScreen(navHostController: NavHostController, userId:String, contex
     // End Veriable Are
 
     // UpdateScreen Content veriables
-    val dummyNote = Cardmodel(
-        title = "My Dummy Note",
-        description = "Hello This Is A Dummy Note",
-        date = getCurrentDateInLocalFormat()
-    )
+
     val id:String = cardId
     var title: String by remember {
         mutableStateOf(cardTitle)
@@ -80,7 +76,6 @@ fun UpdateNoteScreen(navHostController: NavHostController, userId:String, contex
                     title = it
                 },
                     modifier = Modifier.fillMaxWidth(),
-                    readOnly = true,
                     colors = TextFieldDefaults.textFieldColors(
                         textColor = Color.Blue, // Text color
                         containerColor = Color.White, // Background color

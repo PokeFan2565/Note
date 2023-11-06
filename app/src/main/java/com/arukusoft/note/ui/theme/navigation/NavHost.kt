@@ -5,6 +5,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,8 +27,15 @@ import com.arukusoft.note.ui.theme.sreens.UserRegisterScreen
 @Composable
 fun MainNavigation(context: Context) {
     val navHostController = rememberNavController()
-    val userId = getUserId()
+    var userId:String by remember {
+        mutableStateOf("")
+    }
+    LaunchedEffect(key1 = Unit){
+        userId = getUserId() ?: ""
+    }
+
     NavHost(navController = navHostController, startDestination = Screen.Home.route) {
+
         composable(Screen.Auth.route) {
             UserRegisterScreen(context = context, navHostController)
         }
@@ -40,7 +52,7 @@ fun MainNavigation(context: Context) {
             }
         }
         composable(Screen.Home.route) {
-            if (getUserId().isNullOrBlank()) {
+            if (userId.isBlank()) {
                 LoginScreen(context = context, navHostController = navHostController)
             } else {
                 LayoutScreen(
@@ -78,7 +90,7 @@ fun MainNavigation(context: Context) {
             val cardId = it.arguments!!.getString("cardId")
             UpdateNoteScreen(
                 navHostController = navHostController,
-                userId = userId!!,
+                userId = userId,
                 context = context,
                 cardTitle = cardTitle!!,
                 cardDescription = cardDescription!!,

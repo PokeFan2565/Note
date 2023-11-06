@@ -139,9 +139,12 @@ fun updateNote(context: Context, userId:String,id:String, title: String, descrip
         date = date
     )
     var isSuccess = false
-    if (userId != null) {
+    if (userId.isBlank()) {
+        Toast.makeText(context, "Anonymous User Restar The App", Toast.LENGTH_LONG).show()
+        Log.d("nullUser", "saveNote: Anonymuse User Found")
+    }else{
         if (title.isBlank() || description.isBlank()) {
-            Toast.makeText(context, "Please Fill The All Feild", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Note Is Empty", Toast.LENGTH_SHORT).show()
 
         }else{
             database.child("Notes").child(userId).child(id).setValue(myNote)
@@ -149,8 +152,6 @@ fun updateNote(context: Context, userId:String,id:String, title: String, descrip
 
         }
 
-    }else{
-        Log.d("nullUser", "saveNote: Anonymuse User Found")
     }
     return isSuccess
 }
