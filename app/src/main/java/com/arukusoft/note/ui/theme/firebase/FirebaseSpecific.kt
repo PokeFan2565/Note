@@ -103,14 +103,23 @@ fun getUserInfo(callback: (UserModel) -> Unit) {
 
 fun saveNote(context: Context, userId:String, title: String, description: String, date: String): Boolean {
     database = Firebase.database.reference
-    val myNote = Cardmodel(title, description, date)
+
     var isSuccess = false
     if (userId != null) {
         if (title.isBlank() || description.isBlank()) {
             Toast.makeText(context, "Please Fill The All Feild", Toast.LENGTH_SHORT).show()
 
         }else{
-            database.child("Notes").child(userId).child(title).setValue(myNote)
+            val id = database.child("Notes").child(userId).push().key
+            val myNote = Cardmodel(
+                id = id,
+                title = title,
+                description = description,
+                date = date
+            )
+            if (id != null) {
+                database.child("Notes").child(userId).child(id).setValue(myNote)
+            }
             isSuccess = true
 
         }
@@ -121,16 +130,21 @@ fun saveNote(context: Context, userId:String, title: String, description: String
     return isSuccess
 }
 
-fun updateNote(context: Context, userId:String,oldTitle:String, title: String, description: String, date: String): Boolean {
+fun updateNote(context: Context, userId:String,id:String, title: String, description: String, date: String): Boolean {
     database = Firebase.database.reference
-    val myNote = Cardmodel(title, description, date)
+    val myNote = Cardmodel(
+        id = id,
+        title = title,
+        description = description,
+        date = date
+    )
     var isSuccess = false
     if (userId != null) {
         if (title.isBlank() || description.isBlank()) {
             Toast.makeText(context, "Please Fill The All Feild", Toast.LENGTH_SHORT).show()
 
         }else{
-            database.child("Notes").child(userId).child(oldTitle).setValue(myNote)
+            database.child("Notes").child(userId).child(id).setValue(myNote)
             isSuccess = true
 
         }

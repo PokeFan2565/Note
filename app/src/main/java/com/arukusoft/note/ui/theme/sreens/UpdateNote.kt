@@ -37,7 +37,7 @@ import kotlin.reflect.KProperty
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdateNoteScreen(navHostController: NavHostController, userId:String, context: Context, cardTitle:String, cardDescription: String) {
+fun UpdateNoteScreen(navHostController: NavHostController, userId:String, context: Context, cardTitle:String, cardDescription: String, cardId:String) {
     // Veriable That I Used This Screen
     val screenTitle: String = "My Note"
     val screenIcon = Icons.Default.Done
@@ -49,7 +49,7 @@ fun UpdateNoteScreen(navHostController: NavHostController, userId:String, contex
         description = "Hello This Is A Dummy Note",
         date = getCurrentDateInLocalFormat()
     )
-    val oldTitle:String = cardTitle
+    val id:String = cardId
     var title: String by remember {
         mutableStateOf(cardTitle)
     }
@@ -61,7 +61,7 @@ fun UpdateNoteScreen(navHostController: NavHostController, userId:String, contex
         context = context,
         userId = userId,
         navHostController = navHostController,
-        oldTitle = oldTitle,
+        cardId = id,
         title = title,
         description = description,
     ) }) {

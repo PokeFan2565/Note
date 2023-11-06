@@ -34,7 +34,7 @@ fun MainNavigation(context: Context) {
                 onClick = { openAddScreen(navHostController) }) {
                 NotesScreen(navHostController) {
                     if (it != null) {
-                        navHostController.navigate("${Screen.Update.route}/${it.title}/${it.description}")
+                        navHostController.navigate("${Screen.Update.route}/${it.title}/${it.description}/${it.id}")
                     }
                 }
             }
@@ -49,7 +49,7 @@ fun MainNavigation(context: Context) {
                     onClick = { openAddScreen(navHostController) }) {
                     NotesScreen(navHostController) {
                         if (it != null) {
-                            navHostController.navigate("${Screen.Update.route}/${it.title}/${it.description}")
+                            navHostController.navigate("${Screen.Update.route}/${it.title}/${it.description}/${it.id}")
                         }
                     }
                 }
@@ -61,22 +61,28 @@ fun MainNavigation(context: Context) {
         composable(Screen.Edit.route) {
             EditScreen(context, navHostController)
         }
-        composable("${Screen.Update.route}/{cardTitle}/{cardDescription}", arguments = listOf(
-            navArgument(name = "cardTitle") {
-                type = NavType.StringType
-            },
-            navArgument(name = "cardDescription") {
-                type = NavType.StringType
-            }
-        )) {
+        composable("${Screen.Update.route}/{cardTitle}/{cardDescription}/{cardId}",
+            arguments = listOf(
+                navArgument(name = "cardTitle") {
+                    type = NavType.StringType
+                },
+                navArgument(name = "cardDescription") {
+                    type = NavType.StringType
+                },
+                navArgument(name = "cardId") {
+                    type = NavType.StringType
+                }
+            )) {
             val cardTitle = it.arguments!!.getString("cardTitle")
             val cardDescription = it.arguments!!.getString("cardDescription")
+            val cardId = it.arguments!!.getString("cardId")
             UpdateNoteScreen(
                 navHostController = navHostController,
                 userId = userId!!,
                 context = context,
                 cardTitle = cardTitle!!,
-                cardDescription = cardDescription!!
+                cardDescription = cardDescription!!,
+                cardId = cardId!!
             )
         }
 

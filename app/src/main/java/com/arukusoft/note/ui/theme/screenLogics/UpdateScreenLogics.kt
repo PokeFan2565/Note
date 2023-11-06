@@ -11,7 +11,7 @@ fun updateMyNotes(
     context: Context,
     userId: String,
     navHostController: NavHostController,
-    oldTitle:String,
+    cardId:String,
     title: String,
     description: String
 ) {
@@ -19,7 +19,7 @@ fun updateMyNotes(
     val isSuccess = updateNote(
         context = context,
         userId = userId,
-        oldTitle = oldTitle,
+        id = cardId,
         title = title,
         description = description,
         date = currentDate
