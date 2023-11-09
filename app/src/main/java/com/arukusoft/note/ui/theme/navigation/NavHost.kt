@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.arukusoft.note.ui.theme.firebase.getUserId
 import com.arukusoft.note.ui.theme.screenLogics.openAddScreen
+import com.arukusoft.note.ui.theme.sreens.DeleteNoteScreen
 import com.arukusoft.note.ui.theme.sreens.EditScreen
 import com.arukusoft.note.ui.theme.sreens.LayoutScreen
 import com.arukusoft.note.ui.theme.sreens.LoginScreen
@@ -44,7 +45,9 @@ fun MainNavigation(context: Context) {
                 title = "Notes",
                 icon = Icons.Default.Add,
                 onClick = { openAddScreen(navHostController) }) {
-                NotesScreen(navHostController) {
+                NotesScreen(context = context, onDeleteClick = {
+                    navHostController.navigate("${Screen.Delete.route}/${it}")
+                }) {
                     if (it != null) {
                         navHostController.navigate("${Screen.Update.route}/${it.title}/${it.description}/${it.id}")
                     }
@@ -59,7 +62,9 @@ fun MainNavigation(context: Context) {
                     title = "Notes",
                     icon = Icons.Default.Add,
                     onClick = { openAddScreen(navHostController) }) {
-                    NotesScreen(navHostController) {
+                    NotesScreen(context = context, onDeleteClick = {
+                        navHostController.navigate("${Screen.Delete.route}/${it}")
+                    }) {
                         if (it != null) {
                             navHostController.navigate("${Screen.Update.route}/${it.title}/${it.description}/${it.id}")
                         }
@@ -72,6 +77,14 @@ fun MainNavigation(context: Context) {
         }
         composable(Screen.Edit.route) {
             EditScreen(context, navHostController)
+        }
+        composable("${Screen.Delete.route}/{noteId}", arguments = listOf(
+            navArgument(name = "noteId"){
+                type = NavType.StringType
+            }
+        )){
+            val noteId = it.arguments!!.getString("noteId")
+            DeleteNoteScreen(context = context, navHostController = navHostController, id = noteId!!)
         }
         composable("${Screen.Update.route}/{cardTitle}/{cardDescription}/{cardId}",
             arguments = listOf(
@@ -109,4 +122,5 @@ sealed class Screen(val route: String) {
     object Main : Screen("main")
     object Edit : Screen("edit")
     object Update : Screen("update")
+    object Delete : Screen("delete")
 }

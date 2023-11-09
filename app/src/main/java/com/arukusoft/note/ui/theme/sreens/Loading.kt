@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.arukusoft.note.R
 
 @Composable
-fun LoadingScreen() {
+fun LoadingScreen(massage: String = "Connecting...") {
     val lodingImg = painterResource(id = R.drawable.loading)
     Box(
         modifier = Modifier
@@ -47,7 +47,7 @@ fun LoadingScreen() {
             RotatingImage(painter = lodingImg)
             Spacer(modifier = Modifier.height(5.dp))
             Text(
-                text = "Connecting...",
+                text = massage,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Blue

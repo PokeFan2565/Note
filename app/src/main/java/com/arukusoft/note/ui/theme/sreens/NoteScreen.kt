@@ -1,7 +1,9 @@
 package com.arukusoft.note.ui.theme.sreens
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -44,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.arukusoft.note.ui.theme.firebase.deleteNote
 import com.arukusoft.note.ui.theme.firebase.getNotes
 import com.arukusoft.note.ui.theme.firebase.getUserInfo
 import com.arukusoft.note.ui.theme.models.Cardmodel
@@ -62,7 +65,7 @@ var noteList = mutableListOf<Cardmodel?>()
 @SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotesScreen(navHostController: NavHostController, onCardClick: (cardModel:Cardmodel?) -> Unit) {
+fun NotesScreen(context: Context,onDeleteClick: (String) -> Unit, onCardClick: (cardModel:Cardmodel?) -> Unit) {
 
     // To Get User Info
     var userName by remember { mutableStateOf("") }
@@ -120,7 +123,7 @@ fun NotesScreen(navHostController: NavHostController, onCardClick: (cardModel:Ca
                         .padding(horizontal = 20.dp, vertical = 0.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    items(noteList) {
+                    items(noteList) { it ->
                         Card(
                             onClick = {onCardClick(it)},
                             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -177,7 +180,9 @@ fun NotesScreen(navHostController: NavHostController, onCardClick: (cardModel:Ca
                                         imageVector = Icons.Default.Delete,
                                         contentDescription = null,
                                         tint = Red,
-                                        modifier = Modifier.clickable {  }
+                                        modifier = Modifier.clickable {
+                                            onDeleteClick(it!!.id.toString())
+                                        }
                                         )
                                 }
 

@@ -159,3 +159,27 @@ fun updateNote(context: Context, userId:String,id:String, title: String, descrip
     return isSuccess
 }
 
+fun deleteNote(context: Context,
+               id: String): Boolean {
+    database = Firebase.database.reference
+    val loginUser: String = getUserId()!!
+    var isSuccess = false
+    if (loginUser.isBlank()) {
+
+        Toast.makeText(context, "Anonymous  $loginUser", Toast.LENGTH_LONG).show()
+        Log.d("nullUser", "saveNote: Anonymuse User Found")
+    }else{
+        if (id.isBlank()) {
+            Toast.makeText(context, "Note Is Empty", Toast.LENGTH_SHORT).show()
+
+
+        }else{
+            database.child("Notes").child(loginUser).child(id).removeValue()
+            isSuccess = true
+
+        }
+
+    }
+    return isSuccess
+}
+
